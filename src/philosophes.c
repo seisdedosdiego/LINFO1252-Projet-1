@@ -3,31 +3,26 @@
 #include <stdlib.h>  // Inclut les fonctions standard (malloc, free, atoi, EXIT_SUCCESS/FAILURE)
 #include <stdbool.h> // Permet d'utiliser le type bool avec les valeurs true et false.
 
-#define NB_CYCLES 1000000 // nombre de cycles penser/manger
+#define NB_CYCLES 1000000 
 
 int NB_PHILOSOPHES;
 
 pthread_t *phil;            
 pthread_mutex_t *baguette;
 
-void mange(void) {
-    // on ne fait ni sleep ni affichage pour ne pas fausser les temps
-    // => on laisse une fonction vide pour représenter l'action de manger
-}
+void mange(void) {/*Phase "manger" : on fait rien*/}
 
 void* philosophe (void* arg) {
-    int id = *(int *)arg; // on récupère l'id passé en argument
+    int id = *(int *)arg;
 
-    int left = id; // baguette gauche
-    int right = (left + 1) % NB_PHILOSOPHES; // baguette droite, modulo NB_PHILOSOPHES pour pas dépasser
+    int left = id;
+    int right = (left + 1) % NB_PHILOSOPHES;
 
-    // Pour éviter le deadlock :
-    // chaque philosophe prend toujours d'abord la baguette d'indice plus petit
     int first = (left < right) ? left : right;
     int second = (left < right) ? right : left;
 
     for (long i = 0; i < NB_CYCLES; i++) {
-        // Phase "pense" : on fait rien (pas de sleep, pas d'affichage)
+        // Phase "penser" : on fait rien (pas de sleep, pas d'affichage)
         pthread_mutex_lock(&baguette[first]);
         pthread_mutex_lock(&baguette[second]);
         mange();
@@ -50,7 +45,6 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    // Allocation des tableaux dynamiques
     phil = malloc(NB_PHILOSOPHES * sizeof(pthread_t));
     baguette = malloc(NB_PHILOSOPHES * sizeof(pthread_mutex_t));
     int *ids = malloc(NB_PHILOSOPHES * sizeof(int));
@@ -60,7 +54,6 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    // Initialisation des mutex (une baguette par philosophe)
     for (int i = 0; i < NB_PHILOSOPHES; i++) {
         if (pthread_mutex_init(&baguette[i], NULL) != 0) {
             perror("pthread_mutex_init");
@@ -68,21 +61,18 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Création des threads philosophes
     for (int i = 0; i < NB_PHILOSOPHES; i++) {
-        ids[i] = i;  // on stocke l'id dans un tableau séparé
+        ids[i] = i;
         if (pthread_create(&phil[i], NULL, philosophe, &ids[i]) != 0) {
             perror("pthread_create");
             return EXIT_FAILURE;
         }
     }
 
-    // Attente de la fin de tous les philosophes
     for (int i = 0; i < NB_PHILOSOPHES; i++) {
         pthread_join(phil[i], NULL);
     }
 
-    // Nettoyage
     for (int i = 0; i < NB_PHILOSOPHES; i++) {
         pthread_mutex_destroy(&baguette[i]);
     }
