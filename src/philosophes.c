@@ -1,59 +1,44 @@
 #include <pthread.h> // Inclut les types et fonctions pour les threads POSIX (pthread_t, mutex, etc.)
 #include <stdio.h>   // Inclut les fonctions d'entrée/sortie standard (printf, fprintf, etc.)
 #include <stdlib.h>  // Inclut les fonctions standard (malloc, free, atoi, EXIT_SUCCESS/FAILURE)
-#include <stdbool.h>
+#include <stdbool.h> // Permet d'utiliser le type bool avec les valeurs true et false.
 
-#define NB_CYCLES 1000000   // nombre de cycles penser/manger
+#define NB_CYCLES 1000000 // nombre de cycles penser/manger
 
-// Ces deux variables ne sont plus des constantes #define
-int NB_PHILOSOPHES;         // sera lu sur la ligne de commande
+int NB_PHILOSOPHES;
 
-pthread_t *phil;            // tableau dynamique de threads
-pthread_mutex_t *baguette;  // tableau dynamique de mutex (baguettes/fourchettes)
+pthread_t *phil;            
+pthread_mutex_t *baguette;
 
-void mange(int id) {
-    // Dans le projet, on ne fait ni sleep ni affichage pour ne pas fausser les temps.
-    // On laisse une fonction vide pour représenter l'action de manger.
-    (void)id; // pour éviter un warning "unused parameter"
+void mange(void) {
+    // on ne fait ni sleep ni affichage pour ne pas fausser les temps
+    // => on laisse une fonction vide pour représenter l'action de manger
 }
 
-void* philosophe (void* arg)
-{
-    int id = *(int *)arg;          // on récupère l'id passé en argument
+void* philosophe (void* arg) {
+    int id = *(int *)arg; // on récupère l'id passé en argument
 
-    int left  = id;                // baguette gauche
-    int right = (left + 1) % NB_PHILOSOPHES; // baguette droite
+    int left = id; // baguette gauche
+    int right = (left + 1) % NB_PHILOSOPHES; // baguette droite, modulo NB_PHILOSOPHES pour pas dépasser
 
     // Pour éviter le deadlock :
     // chaque philosophe prend toujours d'abord la baguette d'indice plus petit
-    int first  = (left < right) ? left  : right;
+    int first = (left < right) ? left : right;
     int second = (left < right) ? right : left;
 
     for (long i = 0; i < NB_CYCLES; i++) {
-
-        // Phase "pense" : on ne fait rien (pas de sleep, pas d'affichage)
-
-        // Prend la première baguette (mutex lock)
+        // Phase "pense" : on fait rien (pas de sleep, pas d'affichage)
         pthread_mutex_lock(&baguette[first]);
-
-        // Prend la deuxième baguette
         pthread_mutex_lock(&baguette[second]);
-
-        // Mange (action symbolique, fonction vide)
-        mange(id);
-
-        // Relâche la deuxième baguette
+        mange();
         pthread_mutex_unlock(&baguette[second]);
-
-        // Relâche la première baguette
         pthread_mutex_unlock(&baguette[first]);
     }
 
     return NULL;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     if (argc != 2) {
         fprintf(stderr, "Usage: %s NB_PHILOSOPHES\n", argv[0]);
         return EXIT_FAILURE;
@@ -66,7 +51,7 @@ int main(int argc, char *argv[])
     }
 
     // Allocation des tableaux dynamiques
-    phil     = malloc(NB_PHILOSOPHES * sizeof(pthread_t));
+    phil = malloc(NB_PHILOSOPHES * sizeof(pthread_t));
     baguette = malloc(NB_PHILOSOPHES * sizeof(pthread_mutex_t));
     int *ids = malloc(NB_PHILOSOPHES * sizeof(int));
 
