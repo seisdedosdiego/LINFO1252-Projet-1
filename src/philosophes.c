@@ -3,7 +3,7 @@
 #include <stdlib.h>  // Inclut les fonctions standard (malloc, free, atoi, EXIT_SUCCESS/FAILURE)
 #include <stdbool.h> // Permet d'utiliser le type bool avec les valeurs true et false.
 
-#define NB_CYCLES 1000000 
+#define NB_CYCLES 1000000
 
 int NB_PHILOSOPHES;
 
@@ -22,7 +22,7 @@ void* philosophe (void* arg) {
     int second = (left < right) ? right : left;
 
     for (long i = 0; i < NB_CYCLES; i++) {
-        // Phase "penser" : on fait rien (pas de sleep, pas d'affichage)
+        // Phase "penser" : on fait rien
         pthread_mutex_lock(&baguette[first]);
         pthread_mutex_lock(&baguette[second]);
         mange();
