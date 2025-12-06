@@ -87,7 +87,7 @@ def main():
         output_file = graphs_dir / "philosophes.pdf"
     )
 
-    # ---------- Prod / Cons ----------
+    # ---------- Producteurs/ Consommateurs ----------
     prod_data = load_csv_group_by_threads(prod_csv, threads_col_name="threads_prod", time_col_index=3)
     xs, means, stds = compute_stats_per_threads(prod_data)
     plot_with_errorbars(
