@@ -53,3 +53,12 @@ run-prod:
 
 run-lect:
 	./lecteurs-ecrivains $(W) $(R)
+
+measure:
+	bash scripts/measure.sh
+
+plots:
+	python3 scripts/plot_results.py
+
+total: all measure plots fclean
+
