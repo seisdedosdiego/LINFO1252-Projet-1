@@ -16,8 +16,16 @@ RW_SRC = src/lecteurs-ecrivains.c
 RW_OBJ = $(RW_SRC:.c=.o)
 RW_BIN = lecteurs-ecrivains
 
+# ---------- TAS LOCK ----------
+LOCK_SRC = src/lock.c
+LOCK_OBJ = $(LOCK_SRC:.c=.o)
+
+TAS_SRC = src/test_tas.c
+TAS_OBJ = $(TAS_SRC:.c=.o)
+TAS_BIN = test-tas
+
 # ---------- RÈGLE PAR DÉFAUT ----------
-all: $(PHILO_BIN) $(PROD_BIN) $(RW_BIN)
+all: $(PHILO_BIN) $(PROD_BIN) $(RW_BIN) $(TAS_BIN)
 
 # Binaire philosophes
 $(PHILO_BIN): $(PHILO_OBJ)
@@ -31,16 +39,20 @@ $(PROD_BIN): $(PROD_OBJ)
 $(RW_BIN): $(RW_OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
+# Binaire test-tas (lock test-and-set)
+$(TAS_BIN): $(TAS_OBJ) $(LOCK_OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+
 # Compilation générique .c -> .o
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # ---------- NETTOYAGE ----------
 clean:
-	rm -f $(PHILO_OBJ) $(PROD_OBJ) $(RW_OBJ)
+	rm -f $(PHILO_OBJ) $(PROD_OBJ) $(RW_OBJ) $(LOCK_OBJ) $(TAS_OBJ)
 
 fclean: clean
-	rm -f $(PHILO_BIN) $(PROD_BIN) $(RW_BIN)
+	rm -f $(PHILO_BIN) $(PROD_BIN) $(RW_BIN) $(TAS_BIN)
 
 re: fclean all
 
@@ -54,6 +66,9 @@ run-prod:
 run-lect:
 	./lecteurs-ecrivains $(W) $(R)
 
+run-tas:
+	./test-tas $(N)
+
 measure:
 	bash scripts/measure.sh
 
@@ -61,4 +76,3 @@ plots:
 	python3 scripts/plot_results.py
 
 total: all measure plots fclean
-

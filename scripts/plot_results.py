@@ -75,6 +75,8 @@ def main():
     philo_csv = measures_dir / "philosophes.csv"
     prod_csv = measures_dir / "prodcons.csv"
     rw_csv = measures_dir / "lecteurs_ecrivains.csv"
+    tas_csv = measures_dir / "test_tas.csv"
+
 
     # ---------- Philosophes ----------
     philo_data = load_csv_group_by_threads(philo_csv, threads_col_name="threads", time_col_index=2)
@@ -107,6 +109,17 @@ def main():
         xlabel = "Nombre d'écrivains (== lecteurs)",
         ylabel = "Temps d'execution [s]",
         output_file = graphs_dir/ "lecteurs_ecrivains.pdf"
+    )
+
+    # ---------- Test TAS (spinlock) ----------
+    tas_data = load_csv_group_by_threads(tas_csv, threads_col_name="threads", time_col_index=2)
+    xs, means, stds = compute_stats_per_threads(tas_data)
+    plot_with_errorbars(
+        xs, means, stds,
+        title = "",
+        xlabel = "Nombre de threads",
+        ylabel = "Temps d'execution [s]",
+        output_file = graphs_dir / "test_tas.pdf"
     )
 
 if __name__ == "__main__":
