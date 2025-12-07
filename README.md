@@ -8,4 +8,5 @@ Implementation et analyse de plusieurs problèmes classiques de synchronisation 
 ---
 ## Compilation
 Pour complier tous les programmes : 
-```make total
+```bash
+make total
