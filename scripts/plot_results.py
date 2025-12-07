@@ -81,9 +81,9 @@ def main():
     xs, means, stds = compute_stats_per_threads(philo_data)
     plot_with_errorbars(
         xs, means, stds,
-        title = "Temps d'exécution - Philosophes",
+        title = "",
         xlabel = "Nombre de philosophes (threads)",
-        ylabel = "Temps total (s)",
+        ylabel = "Temps d'execution [s]",
         output_file = graphs_dir / "philosophes.pdf"
     )
 
@@ -92,9 +92,9 @@ def main():
     xs, means, stds = compute_stats_per_threads(prod_data)
     plot_with_errorbars(
         xs, means, stds,
-        title = "Temps d'exécution - Producteurs/Consommateurs",
+        title = "",
         xlabel = "Nombre de producteurs (== consommateurs)",
-        ylabel = "Temps total (s)",
+        ylabel = "Temps d'execution [s]",
         output_file= graphs_dir / "prodcons.pdf"
     )
 
@@ -103,9 +103,9 @@ def main():
     xs, means, stds = compute_stats_per_threads(rw_data)
     plot_with_errorbars(
         xs, means, stds,
-        title = "Temps d'exécution - Lecteurs/Écrivains",
+        title = "",
         xlabel = "Nombre d'écrivains (== lecteurs)",
-        ylabel = "Temps total (s)",
+        ylabel = "Temps d'execution [s]",
         output_file = graphs_dir/ "lecteurs_ecrivains.pdf"
     )
 
