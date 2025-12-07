@@ -55,3 +55,12 @@ for n in $THREADS_LIST; do
     done
 done
 
+echo "threads;run;real" > "$MEASURE_DIR/test_tatas.csv"
+
+for n in $THREADS_LIST; do
+    for run in $(seq 1 $RUNS); do
+        res=$($TIME_CMD -f "%e" ./test-tatas "$n" 2>&1 > /dev/null)
+        echo "$n;$run;$res" >> "$MEASURE_DIR/test_tatas.csv"
+    done
+done
+

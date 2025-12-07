@@ -11,4 +11,6 @@ void lock(lock_t *l);
 
 void unlock(lock_t *l);
 
+void tatas_lock(lock_t *l);
+
 #endif

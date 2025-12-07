@@ -8,7 +8,6 @@
 #define WORK_ITERS 10000
 
 static lock_t global_lock;
-
 static long shared_counter = 0;
 
 static void do_work(void) {
@@ -26,14 +25,11 @@ static void *worker(void *arg) {
     int iters = targ->iterations;
 
     for (int i = 0; i < iters; i++) {
-        lock(&global_lock);
-
+        tatas_lock(&global_lock);
         do_work();
         shared_counter++;
-
         unlock(&global_lock);
     }
-
     return NULL;
 }
 
@@ -50,8 +46,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (TOTAL_SECTIONS % nthreads != 0) {
-        fprintf(stderr, "NB_THREADS doit diviser %d (ici, valeurs attendues: 1,2,4,8,16,32)\n",
-                TOTAL_SECTIONS);
+        fprintf(stderr, "NB_THREADS doit diviser %d\n", TOTAL_SECTIONS);
         return EXIT_FAILURE;
     }
 
@@ -83,8 +78,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (shared_counter != TOTAL_SECTIONS) {
-        fprintf(stderr,
-                "Erreur: shared_counter = %ld, devrait être %d\n",
+        fprintf(stderr, "Erreur: shared_counter = %ld, devrait être %d\n",
                 shared_counter, TOTAL_SECTIONS);
         free(threads);
         free(args);
@@ -93,6 +87,5 @@ int main(int argc, char *argv[]) {
 
     free(threads);
     free(args);
-
     return EXIT_SUCCESS;
 }

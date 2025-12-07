@@ -24,8 +24,14 @@ TAS_SRC = src/test_tas.c
 TAS_OBJ = $(TAS_SRC:.c=.o)
 TAS_BIN = test-tas
 
+TATAS_SRC = src/test_tatas.c
+TATAS_OBJ = $(TATAS_SRC:.c=.o)
+TATAS_BIN = test-tatas
+
+
 # ---------- RÈGLE PAR DÉFAUT ----------
-all: $(PHILO_BIN) $(PROD_BIN) $(RW_BIN) $(TAS_BIN)
+all: $(PHILO_BIN) $(PROD_BIN) $(RW_BIN) $(TAS_BIN) $(TATAS_BIN)
+
 
 $(PHILO_BIN): $(PHILO_OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
@@ -39,15 +45,18 @@ $(RW_BIN): $(RW_OBJ)
 $(TAS_BIN): $(TAS_OBJ) $(LOCK_OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
+$(TATAS_BIN): $(TATAS_OBJ) $(LOCK_OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # ---------- NETTOYAGE ----------
 clean:
-	rm -f $(PHILO_OBJ) $(PROD_OBJ) $(RW_OBJ) $(LOCK_OBJ) $(TAS_OBJ)
+	rm -f $(PHILO_OBJ) $(PROD_OBJ) $(RW_OBJ) $(LOCK_OBJ) $(TAS_OBJ) $(TATAS_OBJ)
 
 fclean: clean
-	rm -f $(PHILO_BIN) $(PROD_BIN) $(RW_BIN) $(TAS_BIN)
+	rm -f $(PHILO_BIN) $(PROD_BIN) $(RW_BIN) $(TAS_BIN) $(TATAS_BIN)
 
 re: fclean all
 

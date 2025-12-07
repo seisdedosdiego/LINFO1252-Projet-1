@@ -23,3 +23,14 @@ void lock(lock_t *l) {
 void unlock(lock_t *l) {
     l->flag = 0;
 }
+
+void tatas_lock(lock_t *l) {
+    for (;;) {
+        while (l->flag == 1) {}
+
+        if (xchg(&l->flag, 1) == 0) {
+            return;
+        }
+    }
+}
+
