@@ -141,7 +141,6 @@ def main():
         marker="s", capsize=5, linestyle="--", label="TTAS"
     )
 
-    plt.title("Verrou TAS vs TATAS")
     plt.xlabel("Nombre de threads")
     plt.ylabel("Temps d'exécution [s]")
     plt.ylim(bottom=0)
