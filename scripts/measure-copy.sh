@@ -45,4 +45,3 @@ for total in $THREADS_LIST; do
         echo "$ecrivains;$lecteurs;$run;$elapsed_s" >> "$MEASURE_DIR/lecteurs_ecrivains.csv"
     done
 done
-
